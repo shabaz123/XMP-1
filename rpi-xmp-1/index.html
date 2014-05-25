@@ -1,0 +1,177 @@
+<!DOCTYPE html
+PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta content="width=device-width, initial-scale=1" name="viewport" /> 
+
+<script src="/socket.io/socket.io.js" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+	
+	function clear_stat(){
+		while (stat_div.firstChild)
+		{
+    	stat_div.removeChild(stat_div.firstChild);
+		}
+	}
+	
+	function fwd_click(i){
+		var statustext = document.createTextNode("Status: Setting FWD... ");
+		clear_stat();
+		stat_div.appendChild(statustext);
+		socket.emit('action', { command: 'fwd'+i });
+	}
+	
+	function rev_click(i){
+		var statustext = document.createTextNode("Status: Setting REV... ");
+		clear_stat();
+		stat_div.appendChild(statustext);
+		socket.emit('action', { command: 'rev'+i });
+	}
+	
+	function left_click(i){
+		var statustext = document.createTextNode("Status: Setting LEFT... ");
+		clear_stat();
+		stat_div.appendChild(statustext);
+		socket.emit('action', { command: 'left'+i });
+	}
+	
+	function right_click(i){
+		var statustext = document.createTextNode("Status: Setting RIGHT... ");
+		clear_stat();
+		stat_div.appendChild(statustext);
+		socket.emit('action', { command: 'right'+i });
+	}
+
+	function stop_click(){
+		var statustext = document.createTextNode("Status: Setting STOP... ");
+		clear_stat();
+		stat_div.appendChild(statustext);
+		socket.emit('action', { command: 'stop' });
+	}
+
+	function rec_click(){
+		var statustext = document.createTextNode("Status: Setting LEARN mode... ");
+		clear_stat();
+		stat_div.appendChild(statustext);
+		socket.emit('action', { command: 'rec' });
+	}
+
+	function stoprec_click(){
+		var statustext = document.createTextNode("Status: Stopping LEARN mode... ");
+		clear_stat();
+		stat_div.appendChild(statustext);
+		socket.emit('action', { command: 'stoprec' });
+	}
+
+	function play_click(){
+		var statustext = document.createTextNode("Status: Setting PLAY mode... ");
+		clear_stat();
+		stat_div.appendChild(statustext);
+		socket.emit('action', { command: 'play' });
+	}
+
+
+	var statusready = document.createTextNode("Status: Ready ");
+	var statusdone = document.createTextNode("Command Executed ");
+	var statusspeedlim = document.createTextNode("Limit reached ");
+	var statusalready = document.createTextNode("Command already being executed ");
+	var statuserror = document.createTextNode("Error ");
+
+
+	var socket = io.connect();
+
+	socket.on('status', function (data)
+	{
+		if (data.stat=='idle')
+		{
+			stat_div.appendChild(statusready);		
+		}
+		if (data.stat=='done')
+		{
+			stat_div.appendChild(statusdone);
+		}
+		if (data.stat=='speedlim')
+		{
+			stat_div.appendChild(statusspeedlim);
+		}
+		if (data.stat=='already')
+		{
+			stat_div.appendChild(statusalready);
+		}
+		if (data.stat=='error')
+		{
+			stat_div.appendChild(statuserror);
+		}
+  });
+	
+			
+</script>
+
+<style type="text/css">
+.form
+{  
+	margin: 5em auto 3em;  
+	width: 300px;  
+}
+label
+{
+	width: 8em;
+	float: left;
+	text-align: right;
+	margin-right: 0.5em;
+	display: block
+}
+#id_status
+{
+	background-color:#BF0000;
+	border:medium;
+	color:#FFFFFF;
+}
+</style>
+
+<title>XMP-1 Controller</title>
+</head>
+<body>
+<p><img src="xmp-logo.png" alt="XMP-1" /></p>
+<p>
+  <label for="id_button_turn">Forward</label>
+  <input type="submit" name="id_button_fwd_high" id="id_button_fwd_high" value="High"  onclick="fwd_click(3)">
+  <input type="submit" name="id_button_fwd_med" id="id_button_fwd_med" value="Med"  onclick="fwd_click(2)">
+  <input type="submit" name="id_button_fwd" id="id_button_fwd" value="Low"  onclick="fwd_click(1)">
+  <input type="submit" name="id_button_stop1" id="id_button_stop1" value="Stop"  onclick="stop_click()">
+</p>
+<p>
+  <label for="id_button_turn">Rotate</label>
+  <input type="submit" name="id_button_left_fast" id="id_button_left_fast" value="<<"  onclick="left_click(2)">
+  <input type="submit" name="id_button_left" id="id_button_left" value="<"  onclick="left_click(1)">
+  <input type="submit" name="id_button_right" id="id_button_right" value=">"  onclick="right_click(1)">
+  <input type="submit" name="id_button_right_fast" id="id_button_right_fast" value=">>"  onclick="right_click(2)">
+</p>
+<p>
+  <label for="id_button_turn">Reverse</label>
+  <input type="submit" name="id_button_rev_high" id="id_button_rev_high" value="High"  onclick="rev_click(3)">
+  <input type="submit" name="id_button_rev_med" id="id_button_rev_med" value="Med"  onclick="rev_click(2)">
+  <input type="submit" name="id_button_rev" id="id_button_rev" value="Low"  onclick="rev_click(1)">
+  <input type="submit" name="id_button_stop2" id="id_button_stop2" value="Stop"  onclick="stop_click()">
+</p>
+<p>
+  <label for="id_button_all_on">Learn</label>
+  <input type="submit" name="id_button_rec" id="id_button_rec" value="Learn"  onclick="rec_click()">
+  <input type="submit" name="id_button_stoprec" id="id_button_stoprec" value="Stop"  onclick="stoprec_click()">
+</p>
+<p>
+  <label for="id_button_pat1">Play</label>
+  <input type="submit" name="id_button_play" id="id_button_play" value="Play"  onclick="play_click()">
+</p>
+
+<div id="id_status"></div>
+<script type="text/javascript">
+	var stat_div = document.getElementById("id_status");
+</script>
+</body>
+</html>
